@@ -2162,27 +2162,57 @@ const firebaseConfig = {
         // INITIALIZATION
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, starting init...');
+            
+            // Failsafe: Always show grid after 2 seconds no matter what
+            setTimeout(() => {
+                console.log('Failsafe timeout triggered');
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('gridSection').style.display = 'block';
+            }, 2000);
+            
             initializeApp();
         });
 
         async function initializeApp() {
-            // Load from localStorage first to show grid immediately
-            loadDataFromLocalStorage();
+            console.log('initializeApp started');
             
-            // Show the grid right away
-            applyTeamColors();
-            renderGrid();
-            updateStats();
-            updateScoreDisplay();
-            updateWinnersDisplay();
-            setupEventListeners();
-            
-            document.getElementById('loadingState').style.display = 'none';
-            document.getElementById('gridSection').style.display = 'block';
+            try {
+                // Load from localStorage first
+                console.log('Loading from localStorage...');
+                loadDataFromLocalStorage();
+                console.log('localStorage loaded');
+                
+                // Show the grid right away
+                console.log('Applying team colors...');
+                applyTeamColors();
+                console.log('Rendering grid...');
+                renderGrid();
+                console.log('Updating stats...');
+                updateStats();
+                console.log('Updating score display...');
+                updateScoreDisplay();
+                console.log('Updating winners display...');
+                updateWinnersDisplay();
+                console.log('Setting up event listeners...');
+                setupEventListeners();
+                console.log('All functions completed');
+                
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('gridSection').style.display = 'block';
+                console.log('Grid section shown');
+
+            } catch (error) {
+                console.error('Error in initializeApp:', error);
+                // Force show grid even on error
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('gridSection').style.display = 'block';
+            }
 
             // Then try to connect to Firebase in the background
             if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
                 try {
+                    console.log('Attempting Firebase connection...');
                     firebase.initializeApp(firebaseConfig);
                     db = firebase.database();
                     
@@ -3003,4 +3033,18 @@ const firebaseConfig = {
 
             // Close modals on overlay click
             document.querySelectorAll('.modal-overlay').forEach(overlay => {
-                overlay.addEvent
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        overlay.classList.remove('active');
+                    }
+                });
+            });
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            console.log('Window loaded');
+        });
+    </script>
+</body>
+</html>
