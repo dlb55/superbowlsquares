@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>DrewLa's 2026 Super Bowl Squares</title>
+    <title>DrewLa's 2026 Superbowl Squares</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Bebas+Neue&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
@@ -136,6 +136,74 @@
         .payout-divider {
             color: var(--gold);
             opacity: 0.5;
+        }
+
+        /* Winners Display */
+        .winners-display {
+            margin-top: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .winners-label {
+            color: rgba(255, 255, 255, 0.5);
+            margin-right: 4px;
+        }
+
+        .winner-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .winner-item strong {
+            color: var(--gold);
+        }
+
+        .winner-name {
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .winner-name.pending {
+            color: rgba(255, 255, 255, 0.3);
+            font-style: italic;
+        }
+
+        /* Current Score Display */
+        .current-score-display {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            font-family: 'Bebas Neue', sans-serif;
+        }
+
+        .score-team {
+            text-align: center;
+        }
+
+        .score-team-name {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 4px;
+        }
+
+        .score-value {
+            font-size: 2.5rem;
+            color: var(--gold);
+        }
+
+        .score-separator {
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.3);
         }
 
         /* Stats Bar */
@@ -436,6 +504,43 @@
             top: 2px;
             right: 4px;
             font-size: 0.6rem;
+        }
+
+        .square.in-the-money {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            font-weight: 600;
+            animation: pulse-money 2s ease-in-out infinite;
+            border: 2px solid #4ade80;
+        }
+
+        @keyframes pulse-money {
+            0%, 100% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.8); }
+        }
+
+        .square.winner-q1,
+        .square.winner-q2,
+        .square.winner-q3,
+        .square.winner-q4 {
+            position: relative;
+            font-weight: 600;
+        }
+
+        .square.winner-q1 { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: 2px solid #60a5fa; }
+        .square.winner-q2 { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); color: white; border: 2px solid #a78bfa; }
+        .square.winner-q3 { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: 2px solid #fbbf24; }
+        .square.winner-q4 { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: 2px solid #f87171; }
+
+        .square .winner-badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            font-size: 0.5rem;
+            background: rgba(0,0,0,0.4);
+            padding: 1px 3px;
+            border-radius: 2px;
+            font-weight: 700;
         }
 
         /* Selection Panel */
@@ -968,6 +1073,47 @@
                 margin-bottom: 4px;
             }
 
+            .winners-display {
+                font-size: 0.75rem;
+                margin-top: 8px;
+            }
+
+            .winners-label {
+                display: block;
+                width: 100%;
+                margin-bottom: 4px;
+            }
+
+            .current-score-display {
+                margin-top: 12px;
+                gap: 15px;
+            }
+
+            .score-value {
+                font-size: 2rem;
+            }
+
+            .score-team-name {
+                font-size: 0.8rem;
+            }
+
+            .score-inputs {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .score-input-group {
+                width: 100%;
+            }
+
+            .score-input {
+                width: 100%;
+            }
+
+            .quarter-scores-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
             .stats-bar {
                 gap: 20px;
                 padding: 12px;
@@ -1413,6 +1559,97 @@
             color: rgba(255, 255, 255, 0.5);
         }
 
+        /* Score Management */
+        .score-management-section {
+            background: var(--dark);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .score-inputs {
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .score-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .score-input-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .score-input {
+            width: 80px;
+            padding: 10px;
+            background: var(--dark-secondary);
+            border: 2px solid var(--dark-tertiary);
+            border-radius: 6px;
+            color: var(--gold);
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            font-family: 'Bebas Neue', sans-serif;
+        }
+
+        .score-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .score-input.small {
+            width: 60px;
+            padding: 8px;
+            font-size: 1rem;
+        }
+
+        .quarter-scores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .quarter-score-card {
+            background: var(--dark);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .quarter-score-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .quarter-score-inputs {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .score-dash {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 1.2rem;
+        }
+
+        .quarter-winner-display {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--success);
+            font-weight: 500;
+            min-height: 20px;
+        }
+
         /* Quarter Numbers Editor */
         .quarter-editor {
             display: grid;
@@ -1504,7 +1741,7 @@
 <body>
     <div class="app-container">
         <header class="header">
-            <h1 class="logo">SUPER BOWL SQUARES</h1>
+            <h1 class="logo">DREWLA'S 2026 SUPERBOWL SQUARES</h1>
             <div class="price-badge">$25 PER SQUARE</div>
             <div class="payouts-info">
                 <span class="payouts-label">PAYOUTS:</span>
@@ -1515,6 +1752,27 @@
                 <span class="payout-item"><strong>Q3:</strong> $500</span>
                 <span class="payout-divider">•</span>
                 <span class="payout-item"><strong>Q4:</strong> $875</span>
+            </div>
+            <div class="winners-display" id="winnersDisplay">
+                <span class="winners-label">WINNERS:</span>
+                <span class="winner-item"><strong>Q1:</strong> <span class="winner-name pending" id="winnerQ1">TBD</span></span>
+                <span class="payout-divider">•</span>
+                <span class="winner-item"><strong>Q2:</strong> <span class="winner-name pending" id="winnerQ2">TBD</span></span>
+                <span class="payout-divider">•</span>
+                <span class="winner-item"><strong>Q3:</strong> <span class="winner-name pending" id="winnerQ3">TBD</span></span>
+                <span class="payout-divider">•</span>
+                <span class="winner-item"><strong>Q4:</strong> <span class="winner-name pending" id="winnerQ4">TBD</span></span>
+            </div>
+            <div class="current-score-display" id="currentScoreDisplay" style="display: none;">
+                <div class="score-team">
+                    <div class="score-team-name" id="scoreTeamX">NFC</div>
+                    <div class="score-value" id="scoreValueX">0</div>
+                </div>
+                <div class="score-separator">-</div>
+                <div class="score-team">
+                    <div class="score-team-name" id="scoreTeamY">AFC</div>
+                    <div class="score-value" id="scoreValueY">0</div>
+                </div>
             </div>
         </header>
 
@@ -1660,6 +1918,81 @@
                 </div>
             </div>
 
+            <!-- Score Management -->
+            <div class="admin-section-card">
+                <h3 class="admin-section-title">Score Management</h3>
+                
+                <!-- Current Score -->
+                <div class="score-management-section">
+                    <h4 style="color: var(--gold); font-family: 'Oswald', sans-serif; margin-bottom: 15px;">Current Game Score</h4>
+                    <p style="color: rgba(255,255,255,0.5); margin-bottom: 15px; font-size: 0.85rem;">
+                        Enter the current score to highlight who is "In the Money" on the grid.
+                    </p>
+                    <div class="score-inputs">
+                        <div class="score-input-group">
+                            <label class="score-input-label" id="currentScoreLabelX">NFC Score</label>
+                            <input type="number" class="score-input" id="currentScoreX" min="0" max="99" value="0">
+                        </div>
+                        <div class="score-input-group">
+                            <label class="score-input-label" id="currentScoreLabelY">AFC Score</label>
+                            <input type="number" class="score-input" id="currentScoreY" min="0" max="99" value="0">
+                        </div>
+                        <button class="btn btn-primary btn-small" id="updateCurrentScoreBtn">Update Score</button>
+                        <button class="btn btn-secondary btn-small" id="clearCurrentScoreBtn">Clear</button>
+                    </div>
+                </div>
+
+                <!-- Quarter Final Scores -->
+                <div class="score-management-section" style="margin-top: 30px;">
+                    <h4 style="color: var(--gold); font-family: 'Oswald', sans-serif; margin-bottom: 15px;">Quarter Final Scores</h4>
+                    <p style="color: rgba(255,255,255,0.5); margin-bottom: 15px; font-size: 0.85rem;">
+                        Enter the final score at the end of each quarter to lock in winners.
+                    </p>
+                    <div class="quarter-scores-grid">
+                        <div class="quarter-score-card">
+                            <div class="quarter-score-title">Q1 Final</div>
+                            <div class="quarter-score-inputs">
+                                <input type="number" class="score-input small" id="q1ScoreX" min="0" max="99" placeholder="NFC">
+                                <span class="score-dash">-</span>
+                                <input type="number" class="score-input small" id="q1ScoreY" min="0" max="99" placeholder="AFC">
+                            </div>
+                            <button class="btn btn-secondary btn-small" onclick="saveQuarterScore(1)">Save Q1</button>
+                            <div class="quarter-winner-display" id="q1WinnerDisplay"></div>
+                        </div>
+                        <div class="quarter-score-card">
+                            <div class="quarter-score-title">Q2 Final (Halftime)</div>
+                            <div class="quarter-score-inputs">
+                                <input type="number" class="score-input small" id="q2ScoreX" min="0" max="99" placeholder="NFC">
+                                <span class="score-dash">-</span>
+                                <input type="number" class="score-input small" id="q2ScoreY" min="0" max="99" placeholder="AFC">
+                            </div>
+                            <button class="btn btn-secondary btn-small" onclick="saveQuarterScore(2)">Save Q2</button>
+                            <div class="quarter-winner-display" id="q2WinnerDisplay"></div>
+                        </div>
+                        <div class="quarter-score-card">
+                            <div class="quarter-score-title">Q3 Final</div>
+                            <div class="quarter-score-inputs">
+                                <input type="number" class="score-input small" id="q3ScoreX" min="0" max="99" placeholder="NFC">
+                                <span class="score-dash">-</span>
+                                <input type="number" class="score-input small" id="q3ScoreY" min="0" max="99" placeholder="AFC">
+                            </div>
+                            <button class="btn btn-secondary btn-small" onclick="saveQuarterScore(3)">Save Q3</button>
+                            <div class="quarter-winner-display" id="q3WinnerDisplay"></div>
+                        </div>
+                        <div class="quarter-score-card">
+                            <div class="quarter-score-title">Q4 Final (Game End)</div>
+                            <div class="quarter-score-inputs">
+                                <input type="number" class="score-input small" id="q4ScoreX" min="0" max="99" placeholder="NFC">
+                                <span class="score-dash">-</span>
+                                <input type="number" class="score-input small" id="q4ScoreY" min="0" max="99" placeholder="AFC">
+                            </div>
+                            <button class="btn btn-secondary btn-small" onclick="saveQuarterScore(4)">Save Q4</button>
+                            <div class="quarter-winner-display" id="q4WinnerDisplay"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Quarter Numbers Editor -->
             <div class="admin-section-card">
                 <h3 class="admin-section-title">Quarter Numbers</h3>
@@ -1758,7 +2091,7 @@
                     <div class="payment-icon">Z</div>
                     <div class="payment-details">
                         <div class="payment-label">Zelle</div>
-                        <div class="payment-value">drewlabelle5@gmail.com</div>
+                        <div class="payment-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cda9bfa8baa1acafa8a1a1a8f88daaa0aca4a1e3aea2a0">[email&#160;protected]</a></div>
                     </div>
                 </div>
             </div>
@@ -1778,7 +2111,7 @@
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // ============================================
         // FIREBASE CONFIGURATION
         // ============================================
@@ -1817,6 +2150,13 @@ const firebaseConfig = {
             x: { name: 'NFC TEAM', bgColor: '#ffffff', textColor: '#0a0a0a' },
             y: { name: 'AFC TEAM', bgColor: '#D4AF37', textColor: '#0a0a0a' }
         };
+        let currentScore = { x: null, y: null };
+        let quarterScores = {
+            1: { x: null, y: null, winner: null },
+            2: { x: null, y: null, winner: null },
+            3: { x: null, y: null, winner: null },
+            4: { x: null, y: null, winner: null }
+        };
 
         // ============================================
         // INITIALIZATION
@@ -1842,6 +2182,8 @@ const firebaseConfig = {
                 applyTeamColors();
                 renderGrid();
                 updateStats();
+                updateScoreDisplay();
+                updateWinnersDisplay();
                 setupEventListeners();
 
                 document.getElementById('loadingState').style.display = 'none';
@@ -1856,6 +2198,8 @@ const firebaseConfig = {
                 applyTeamColors();
                 renderGrid();
                 updateStats();
+                updateScoreDisplay();
+                updateWinnersDisplay();
                 setupEventListeners();
                 document.getElementById('gridSection').style.display = 'block';
             }
@@ -1872,6 +2216,8 @@ const firebaseConfig = {
             quarterNumbers = data.quarterNumbers || quarterNumbers;
             participants = data.participants || {};
             teamSettings = data.teamSettings || teamSettings;
+            currentScore = data.currentScore || currentScore;
+            quarterScores = data.quarterScores || quarterScores;
 
             // Listen for real-time updates
             db.ref('/squares').on('value', (snapshot) => {
@@ -1897,6 +2243,19 @@ const firebaseConfig = {
                 renderGrid();
                 if (isAdmin) populateTeamSettingsForm();
             });
+
+            db.ref('/currentScore').on('value', (snapshot) => {
+                currentScore = snapshot.val() || { x: null, y: null };
+                renderGrid();
+                updateScoreDisplay();
+            });
+
+            db.ref('/quarterScores').on('value', (snapshot) => {
+                quarterScores = snapshot.val() || quarterScores;
+                renderGrid();
+                updateWinnersDisplay();
+                if (isAdmin) populateQuarterScores();
+            });
         }
 
         function loadDataFromLocalStorage() {
@@ -1907,6 +2266,8 @@ const firebaseConfig = {
                 quarterNumbers = data.quarterNumbers || quarterNumbers;
                 participants = data.participants || {};
                 teamSettings = data.teamSettings || teamSettings;
+                currentScore = data.currentScore || currentScore;
+                quarterScores = data.quarterScores || quarterScores;
             }
         }
 
@@ -1916,14 +2277,18 @@ const firebaseConfig = {
                     squares: squaresData,
                     quarterNumbers: quarterNumbers,
                     participants: participants,
-                    teamSettings: teamSettings
+                    teamSettings: teamSettings,
+                    currentScore: currentScore,
+                    quarterScores: quarterScores
                 });
             } else {
                 localStorage.setItem('superbowlSquares', JSON.stringify({
                     squares: squaresData,
                     quarterNumbers: quarterNumbers,
                     participants: participants,
-                    teamSettings: teamSettings
+                    teamSettings: teamSettings,
+                    currentScore: currentScore,
+                    quarterScores: quarterScores
                 }));
             }
         }
@@ -1944,6 +2309,42 @@ const firebaseConfig = {
         function renderGrid() {
             const grid = document.getElementById('squaresGrid');
             grid.innerHTML = '';
+
+            // Calculate "in the money" position
+            let inTheMoneyX = null;
+            let inTheMoneyY = null;
+            if (currentScore.x !== null && currentScore.y !== null) {
+                const lastDigitX = currentScore.x % 10;
+                const lastDigitY = currentScore.y % 10;
+                // Find column (x) where the number matches lastDigitX
+                for (let i = 0; i < 10; i++) {
+                    // Use Q1 numbers for current score tracking (or whichever quarter is active)
+                    const activeQuarter = getActiveQuarter();
+                    if (quarterNumbers[activeQuarter] && quarterNumbers[activeQuarter].x[i] == lastDigitX) {
+                        inTheMoneyX = i;
+                    }
+                    if (quarterNumbers[activeQuarter] && quarterNumbers[activeQuarter].y[i] == lastDigitY) {
+                        inTheMoneyY = i;
+                    }
+                }
+            }
+
+            // Calculate winner positions for each quarter
+            const quarterWinners = {};
+            for (let q = 1; q <= 4; q++) {
+                if (quarterScores[q] && quarterScores[q].x !== null && quarterScores[q].y !== null) {
+                    const lastDigitX = quarterScores[q].x % 10;
+                    const lastDigitY = quarterScores[q].y % 10;
+                    let winX = null, winY = null;
+                    for (let i = 0; i < 10; i++) {
+                        if (quarterNumbers[q] && quarterNumbers[q].x[i] == lastDigitX) winX = i;
+                        if (quarterNumbers[q] && quarterNumbers[q].y[i] == lastDigitY) winY = i;
+                    }
+                    if (winX !== null && winY !== null) {
+                        quarterWinners[q] = { x: winX, y: winY };
+                    }
+                }
+            }
 
             // Corner cell with team indicator
             const corner = document.createElement('div');
@@ -1988,9 +2389,32 @@ const firebaseConfig = {
                     square.className = 'square';
                     square.dataset.id = squareId;
 
+                    let winnerBadges = [];
+
                     if (squaresData[squareId]) {
                         square.classList.add('taken');
                         square.textContent = squaresData[squareId];
+
+                        // Check if this square won any quarter
+                        for (let q = 1; q <= 4; q++) {
+                            if (quarterWinners[q] && quarterWinners[q].x === x && quarterWinners[q].y === y) {
+                                square.classList.add(`winner-q${q}`);
+                                winnerBadges.push(`Q${q}`);
+                            }
+                        }
+
+                        // Check if "in the money" (only if not already a winner)
+                        if (winnerBadges.length === 0 && inTheMoneyX === x && inTheMoneyY === y) {
+                            square.classList.add('in-the-money');
+                        }
+
+                        // Add winner badges
+                        if (winnerBadges.length > 0) {
+                            const badge = document.createElement('span');
+                            badge.className = 'winner-badge';
+                            badge.textContent = winnerBadges.join(',');
+                            square.appendChild(badge);
+                        }
                     } else if (selectedSquares.has(squareId)) {
                         square.classList.add('selected');
                     }
@@ -1999,6 +2423,15 @@ const firebaseConfig = {
                     grid.appendChild(square);
                 }
             }
+        }
+
+        function getActiveQuarter() {
+            // Determine which quarter we're in based on which scores are set
+            if (quarterScores[4] && quarterScores[4].x !== null) return 4;
+            if (quarterScores[3] && quarterScores[3].x !== null) return 4;
+            if (quarterScores[2] && quarterScores[2].x !== null) return 3;
+            if (quarterScores[1] && quarterScores[1].x !== null) return 2;
+            return 1;
         }
 
         // ============================================
@@ -2134,6 +2567,7 @@ const firebaseConfig = {
             document.getElementById('gridSection').style.display = 'none';
             document.getElementById('adminSection').classList.add('active');
             populateTeamSettingsForm();
+            populateQuarterScores();
             renderQuarterEditor();
             renderAdminTable();
         }
@@ -2373,6 +2807,8 @@ const firebaseConfig = {
                 participants: participants,
                 quarterNumbers: quarterNumbers,
                 teamSettings: teamSettings,
+                currentScore: currentScore,
+                quarterScores: quarterScores,
                 exportDate: new Date().toISOString()
             };
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -2381,6 +2817,119 @@ const firebaseConfig = {
             a.href = url;
             a.download = 'superbowl-squares-export.json';
             a.click();
+        }
+
+        // ============================================
+        // SCORE MANAGEMENT
+        // ============================================
+        function updateCurrentScore() {
+            const scoreX = document.getElementById('currentScoreX').value;
+            const scoreY = document.getElementById('currentScoreY').value;
+            
+            currentScore.x = scoreX !== '' ? parseInt(scoreX) : null;
+            currentScore.y = scoreY !== '' ? parseInt(scoreY) : null;
+            
+            saveData();
+            renderGrid();
+            updateScoreDisplay();
+        }
+
+        function clearCurrentScore() {
+            currentScore.x = null;
+            currentScore.y = null;
+            document.getElementById('currentScoreX').value = '0';
+            document.getElementById('currentScoreY').value = '0';
+            
+            saveData();
+            renderGrid();
+            updateScoreDisplay();
+        }
+
+        function saveQuarterScore(quarter) {
+            const scoreX = document.getElementById(`q${quarter}ScoreX`).value;
+            const scoreY = document.getElementById(`q${quarter}ScoreY`).value;
+            
+            if (scoreX === '' || scoreY === '') {
+                alert('Please enter both scores');
+                return;
+            }
+            
+            quarterScores[quarter] = {
+                x: parseInt(scoreX),
+                y: parseInt(scoreY),
+                winner: null
+            };
+            
+            // Find the winner
+            const lastDigitX = quarterScores[quarter].x % 10;
+            const lastDigitY = quarterScores[quarter].y % 10;
+            
+            let winX = null, winY = null;
+            for (let i = 0; i < 10; i++) {
+                if (quarterNumbers[quarter] && quarterNumbers[quarter].x[i] == lastDigitX) winX = i;
+                if (quarterNumbers[quarter] && quarterNumbers[quarter].y[i] == lastDigitY) winY = i;
+            }
+            
+            if (winX !== null && winY !== null) {
+                const squareId = `${winX}-${winY}`;
+                quarterScores[quarter].winner = squaresData[squareId] || 'Unclaimed';
+            }
+            
+            saveData();
+            renderGrid();
+            updateWinnersDisplay();
+            populateQuarterScores();
+        }
+
+        function updateScoreDisplay() {
+            const display = document.getElementById('currentScoreDisplay');
+            if (currentScore.x !== null && currentScore.y !== null) {
+                display.style.display = 'flex';
+                document.getElementById('scoreTeamX').textContent = teamSettings.x.name;
+                document.getElementById('scoreTeamY').textContent = teamSettings.y.name;
+                document.getElementById('scoreValueX').textContent = currentScore.x;
+                document.getElementById('scoreValueY').textContent = currentScore.y;
+            } else {
+                display.style.display = 'none';
+            }
+        }
+
+        function updateWinnersDisplay() {
+            for (let q = 1; q <= 4; q++) {
+                const el = document.getElementById(`winnerQ${q}`);
+                if (quarterScores[q] && quarterScores[q].winner) {
+                    el.textContent = quarterScores[q].winner;
+                    el.classList.remove('pending');
+                } else {
+                    el.textContent = 'TBD';
+                    el.classList.add('pending');
+                }
+            }
+        }
+
+        function populateQuarterScores() {
+            for (let q = 1; q <= 4; q++) {
+                if (quarterScores[q] && quarterScores[q].x !== null) {
+                    document.getElementById(`q${q}ScoreX`).value = quarterScores[q].x;
+                    document.getElementById(`q${q}ScoreY`).value = quarterScores[q].y;
+                    const winnerDisplay = document.getElementById(`q${q}WinnerDisplay`);
+                    if (quarterScores[q].winner) {
+                        winnerDisplay.textContent = `Winner: ${quarterScores[q].winner}`;
+                    }
+                }
+            }
+            
+            // Update current score inputs
+            if (currentScore.x !== null) {
+                document.getElementById('currentScoreX').value = currentScore.x;
+            }
+            if (currentScore.y !== null) {
+                document.getElementById('currentScoreY').value = currentScore.y;
+            }
+            
+            // Update labels with team names
+            document.getElementById('currentScoreLabelX').textContent = `${teamSettings.x.name} Score`;
+            document.getElementById('currentScoreLabelY').textContent = `${teamSettings.y.name} Score`;
         }
 
         // ============================================
@@ -2449,15 +2998,10 @@ const firebaseConfig = {
             });
             document.getElementById('teamYNameInput').addEventListener('input', () => updateTeamPreview('Y'));
 
+            // Score management
+            document.getElementById('updateCurrentScoreBtn').addEventListener('click', updateCurrentScore);
+            document.getElementById('clearCurrentScoreBtn').addEventListener('click', clearCurrentScore);
+
             // Close modals on overlay click
             document.querySelectorAll('.modal-overlay').forEach(overlay => {
-                overlay.addEventListener('click', (e) => {
-                    if (e.target === overlay) {
-                        overlay.classList.remove('active');
-                    }
-                });
-            });
-        }
-    </script>
-</body>
-</html>
+                overlay.addEvent
