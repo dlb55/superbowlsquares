@@ -2166,66 +2166,56 @@ const firebaseConfig = {
         });
 
         async function initializeApp() {
-            try {
-                // Try to initialize Firebase
-                if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
-                    try {
-                        firebase.initializeApp(firebaseConfig);
-                        db = firebase.database();
-                        
-                        // Test connection with timeout
-                        const testConnection = new Promise((resolve, reject) => {
-                            const timeout = setTimeout(() => reject(new Error('Timeout')), 5000);
-                            db.ref('.info/connected').once('value', () => {
-                                clearTimeout(timeout);
-                                resolve();
-                            }).catch(reject);
-                        });
-                        
-                        await testConnection;
-                        await loadDataFromFirebase();
-                        isFirebaseConnected = true;
-                        console.log("Firebase connected successfully");
-                    } catch (firebaseError) {
-                        console.warn("Firebase failed, using local storage:", firebaseError);
-                        loadDataFromLocalStorage();
-                    }
-                } else {
-                    console.log("Running in demo mode (no Firebase configured)");
-                    loadDataFromLocalStorage();
-                }
-            } catch (error) {
-                console.error("Initialization error:", error);
-                loadDataFromLocalStorage();
-            }
-
-            // Always show the grid
+            // Load from localStorage first to show grid immediately
+            loadDataFromLocalStorage();
+            
+            // Show the grid right away
             applyTeamColors();
             renderGrid();
             updateStats();
             updateScoreDisplay();
             updateWinnersDisplay();
             setupEventListeners();
-
+            
             document.getElementById('loadingState').style.display = 'none';
             document.getElementById('gridSection').style.display = 'block';
+
+            // Then try to connect to Firebase in the background
+            if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
+                try {
+                    firebase.initializeApp(firebaseConfig);
+                    db = firebase.database();
+                    
+                    // Try to load from Firebase
+                    const snapshot = await db.ref('/').once('value');
+                    const data = snapshot.val() || {};
+                    
+                    squaresData = data.squares || {};
+                    quarterNumbers = data.quarterNumbers || quarterNumbers;
+                    participants = data.participants || {};
+                    teamSettings = data.teamSettings || teamSettings;
+                    currentScore = data.currentScore || currentScore;
+                    quarterScores = data.quarterScores || quarterScores;
+                    
+                    isFirebaseConnected = true;
+                    console.log("Firebase connected successfully");
+                    
+                    // Re-render with Firebase data
+                    applyTeamColors();
+                    renderGrid();
+                    updateStats();
+                    updateScoreDisplay();
+                    updateWinnersDisplay();
+                    
+                    // Set up real-time listeners
+                    setupFirebaseListeners();
+                } catch (error) {
+                    console.warn("Firebase connection failed:", error);
+                }
+            }
         }
 
-        // ============================================
-        // DATA PERSISTENCE
-        // ============================================
-        async function loadDataFromFirebase() {
-            const snapshot = await db.ref('/').once('value');
-            const data = snapshot.val() || {};
-            
-            squaresData = data.squares || {};
-            quarterNumbers = data.quarterNumbers || quarterNumbers;
-            participants = data.participants || {};
-            teamSettings = data.teamSettings || teamSettings;
-            currentScore = data.currentScore || currentScore;
-            quarterScores = data.quarterScores || quarterScores;
-
-            // Listen for real-time updates
+        function setupFirebaseListeners() {
             db.ref('/squares').on('value', (snapshot) => {
                 squaresData = snapshot.val() || {};
                 renderGrid();
@@ -2264,6 +2254,9 @@ const firebaseConfig = {
             });
         }
 
+        // ============================================
+        // DATA PERSISTENCE
+        // ============================================
         function loadDataFromLocalStorage() {
             const savedData = localStorage.getItem('superbowlSquares');
             if (savedData) {
