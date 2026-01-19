@@ -392,42 +392,40 @@
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 10px;
-            margin-bottom: 15px;
-            padding: 8px 12px;
+            gap: 6px;
+            margin-bottom: 8px;
+            padding: 4px 8px;
             background: var(--dark);
-            border-radius: 6px;
+            border-radius: 4px;
             border: 1px solid var(--dark-tertiary);
             width: fit-content;
             margin-left: auto;
-            flex-wrap: wrap;
         }
 
         .status-legend-title {
             font-family: 'Oswald', sans-serif;
-            font-size: 0.75rem;
+            font-size: 0.55rem;
             color: rgba(255, 255, 255, 0.5);
             letter-spacing: 0.5px;
         }
 
         .status-legend-items {
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+            gap: 6px;
         }
 
         .status-legend-item {
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-size: 0.7rem;
+            gap: 2px;
+            font-size: 0.5rem;
             color: rgba(255, 255, 255, 0.6);
         }
 
         .status-legend-box {
-            width: 16px;
-            height: 16px;
-            border-radius: 3px;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
         }
 
         .status-legend-box.in-money-box {
@@ -520,7 +518,7 @@
             min-width: 50px;
             min-height: 50px;
             background: var(--green-field);
-            border: 2px solid transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -558,6 +556,7 @@
             background: var(--dark-tertiary);
             cursor: default;
             color: rgba(255, 255, 255, 0.8);
+            border-color: rgba(255, 255, 255, 0.1);
         }
 
         .square.selected {
@@ -1222,28 +1221,27 @@
             }
 
             .status-legend {
-                padding: 6px 10px;
-                gap: 6px;
-                margin-bottom: 10px;
+                padding: 3px 6px;
+                gap: 4px;
+                margin-bottom: 6px;
             }
 
             .status-legend-title {
-                font-size: 0.6rem;
-                width: 100%;
+                font-size: 0.5rem;
             }
 
             .status-legend-items {
-                gap: 8px;
+                gap: 5px;
             }
 
             .status-legend-item {
-                font-size: 0.6rem;
-                gap: 3px;
+                font-size: 0.45rem;
+                gap: 2px;
             }
 
             .status-legend-box {
-                width: 12px;
-                height: 12px;
+                width: 8px;
+                height: 8px;
             }
 
             .teams-header {
@@ -1934,27 +1932,27 @@
 
                 <!-- Status Legend -->
                 <div class="status-legend">
-                    <div class="status-legend-title">Status Key:</div>
+                    <div class="status-legend-title">Status:</div>
                     <div class="status-legend-items">
                         <div class="status-legend-item">
                             <div class="status-legend-box in-money-box"></div>
-                            <span>In the Money</span>
+                            <span>In Money</span>
                         </div>
                         <div class="status-legend-item">
                             <div class="status-legend-box winner-q1-box"></div>
-                            <span>Q1 Winner</span>
+                            <span>Q1</span>
                         </div>
                         <div class="status-legend-item">
                             <div class="status-legend-box winner-q2-box"></div>
-                            <span>Q2 Winner</span>
+                            <span>Q2</span>
                         </div>
                         <div class="status-legend-item">
                             <div class="status-legend-box winner-q3-box"></div>
-                            <span>Q3 Winner</span>
+                            <span>Q3</span>
                         </div>
                         <div class="status-legend-item">
                             <div class="status-legend-box winner-q4-box"></div>
-                            <span>Q4 Winner</span>
+                            <span>Q4</span>
                         </div>
                     </div>
                 </div>
