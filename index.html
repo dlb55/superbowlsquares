@@ -342,51 +342,6 @@
         }
 
         /* Quarter Key */
-        .quarter-key {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-bottom: 15px;
-            padding: 8px 12px;
-            background: var(--dark);
-            border-radius: 6px;
-            border: 1px solid var(--dark-tertiary);
-            width: fit-content;
-            margin-left: auto;
-        }
-
-        .quarter-key-title {
-            font-family: 'Oswald', sans-serif;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.5);
-            letter-spacing: 0.5px;
-        }
-
-        .quarter-key-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 2px;
-            width: 44px;
-            height: 28px;
-        }
-
-        .quarter-key-cell {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Oswald', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 600;
-            border-radius: 2px;
-        }
-
-        .quarter-key-cell.q1 { background: rgba(212, 175, 55, 0.3); color: var(--gold); }
-        .quarter-key-cell.q2 { background: rgba(212, 175, 55, 0.22); color: var(--gold); }
-        .quarter-key-cell.q3 { background: rgba(212, 175, 55, 0.15); color: var(--gold); }
-        .quarter-key-cell.q4 { background: rgba(212, 175, 55, 0.08); color: var(--gold); }
-
         /* Status Legend */
         .status-legend {
             display: flex;
@@ -478,6 +433,58 @@
         .number-header.corner {
             background: linear-gradient(135deg, var(--gold) 0%, #8B7355 100%);
         }
+
+        .corner-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            gap: 2px;
+        }
+
+        .corner-teams {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.5rem;
+            color: #0a0a0a;
+            font-weight: 600;
+            line-height: 1.1;
+        }
+
+        .corner-team-x {
+            font-size: 0.45rem;
+        }
+
+        .corner-team-y {
+            font-size: 0.45rem;
+        }
+
+        .corner-quarter-key {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 1px;
+            width: 36px;
+            height: 20px;
+        }
+
+        .corner-q {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.4rem;
+            font-weight: 600;
+            border-radius: 1px;
+            color: #0a0a0a;
+        }
+
+        .corner-q.q1 { background: rgba(255, 255, 255, 0.9); }
+        .corner-q.q2 { background: rgba(255, 255, 255, 0.7); }
+        .corner-q.q3 { background: rgba(255, 255, 255, 0.5); }
+        .corner-q.q4 { background: rgba(255, 255, 255, 0.3); }
 
         .quarter-numbers {
             display: grid;
@@ -934,6 +941,16 @@
             color: var(--gold);
         }
 
+        .toggle-btn.remove-btn {
+            border-color: #dc2626;
+            color: #dc2626;
+        }
+
+        .toggle-btn.remove-btn:hover {
+            background: #dc2626;
+            color: white;
+        }
+
         /* Quarter Numbers Section */
         .numbers-section {
             margin-top: 30px;
@@ -1202,24 +1219,6 @@
                 -webkit-overflow-scrolling: touch;
             }
 
-            .quarter-key {
-                padding: 6px 10px;
-                gap: 8px;
-            }
-
-            .quarter-key-title {
-                font-size: 0.65rem;
-            }
-
-            .quarter-key-grid {
-                width: 36px;
-                height: 24px;
-            }
-
-            .quarter-key-cell {
-                font-size: 0.5rem;
-            }
-
             .status-legend {
                 padding: 3px 6px;
                 gap: 4px;
@@ -1265,17 +1264,39 @@
 
             .squares-grid {
                 grid-template-columns: 50px repeat(10, 32px);
-                gap: 1px;
+                gap: 0px;
             }
 
             .square {
                 min-width: 32px;
                 min-height: 32px;
                 font-size: 0.5rem;
+                border-width: 0.5px;
             }
 
             .number-header {
                 min-height: 40px;
+            }
+
+            .corner-content {
+                gap: 1px;
+            }
+
+            .corner-teams {
+                font-size: 0.4rem;
+            }
+
+            .corner-team-x, .corner-team-y {
+                font-size: 0.35rem;
+            }
+
+            .corner-quarter-key {
+                width: 28px;
+                height: 16px;
+            }
+
+            .corner-q {
+                font-size: 0.3rem;
             }
 
             .quarter-num {
@@ -1479,16 +1500,35 @@
 
             .squares-grid {
                 grid-template-columns: 45px repeat(10, 28px);
+                gap: 0px;
             }
 
             .square {
                 min-width: 28px;
                 min-height: 28px;
                 font-size: 0.45rem;
+                border-width: 0.5px;
             }
 
             .number-header {
                 min-height: 35px;
+            }
+
+            .corner-quarter-key {
+                width: 24px;
+                height: 14px;
+            }
+
+            .corner-q {
+                font-size: 0.25rem;
+            }
+
+            .corner-teams {
+                font-size: 0.35rem;
+            }
+
+            .corner-team-x, .corner-team-y {
+                font-size: 0.3rem;
             }
 
             .quarter-num {
@@ -1919,17 +1959,6 @@
                 <!-- Scroll hint for mobile -->
                 <div class="scroll-hint">← Swipe to see full grid →</div>
 
-                <!-- Quarter Key Legend -->
-                <div class="quarter-key">
-                    <div class="quarter-key-title">Quarter Number Key:</div>
-                    <div class="quarter-key-grid">
-                        <div class="quarter-key-cell q1">Q1</div>
-                        <div class="quarter-key-cell q2">Q2</div>
-                        <div class="quarter-key-cell q3">Q3</div>
-                        <div class="quarter-key-cell q4">Q4</div>
-                    </div>
-                </div>
-
                 <!-- Status Legend -->
                 <div class="status-legend">
                     <div class="status-legend-title">Status:</div>
@@ -2183,6 +2212,7 @@
                                 <th>Total Due</th>
                                 <th>Status</th>
                                 <th>Action</th>
+                                <th>Remove</th>
                             </tr>
                         </thead>
                         <tbody id="adminTableBody">
@@ -2541,10 +2571,23 @@ const firebaseConfig = {
                 }
             }
 
-            // Corner cell with team indicator
+            // Corner cell with team indicator and quarter key
             const corner = document.createElement('div');
             corner.className = 'number-header corner';
-            corner.innerHTML = `<span style="font-size: 0.65rem; color: #0a0a0a; text-align: center; line-height: 1.2;">NFC→<br>AFC↓</span>`;
+            corner.innerHTML = `
+                <div class="corner-content">
+                    <div class="corner-teams">
+                        <span class="corner-team-x">${teamSettings.x.name.split(' ')[0]}→</span>
+                        <span class="corner-team-y">${teamSettings.y.name.split(' ')[0]}↓</span>
+                    </div>
+                    <div class="corner-quarter-key">
+                        <div class="corner-q q1">Q1</div>
+                        <div class="corner-q q2">Q2</div>
+                        <div class="corner-q q3">Q3</div>
+                        <div class="corner-q q4">Q4</div>
+                    </div>
+                </div>
+            `;
             grid.appendChild(corner);
 
             // Top row (X axis - team X numbers)
@@ -2732,6 +2775,16 @@ const firebaseConfig = {
 
             document.getElementById('availableCount').textContent = available;
             document.getElementById('takenCount').textContent = taken;
+            
+            // Hide stats bar when all squares are taken
+            const statsBar = document.querySelector('.stats-bar');
+            if (statsBar) {
+                if (taken >= 100) {
+                    statsBar.style.display = 'none';
+                } else {
+                    statsBar.style.display = 'flex';
+                }
+            }
         }
 
         // ============================================
@@ -2948,7 +3001,7 @@ const firebaseConfig = {
 
             const names = Object.keys(participants);
             if (names.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: rgba(255,255,255,0.5);">No participants yet</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: rgba(255,255,255,0.5);">No participants yet</td></tr>';
                 return;
             }
 
@@ -2965,6 +3018,7 @@ const firebaseConfig = {
                     <td>$${total}</td>
                     <td><span class="status-badge ${isPaid ? 'status-paid' : 'status-pending'}">${isPaid ? 'Paid' : 'Pending'}</span></td>
                     <td><button class="toggle-btn" onclick="togglePaymentStatus('${name}')">${isPaid ? 'Mark Unpaid' : 'Mark Paid'}</button></td>
+                    <td><button class="toggle-btn remove-btn" onclick="removeParticipant('${name}')">Remove</button></td>
                 `;
                 tbody.appendChild(row);
             });
@@ -2975,6 +3029,24 @@ const firebaseConfig = {
                 participants[name].paid = !participants[name].paid;
                 saveData();
                 renderAdminTable();
+            }
+        }
+
+        function removeParticipant(name) {
+            if (confirm(`Are you sure you want to remove ${name} and release their squares?`)) {
+                // Get their squares and remove them from squaresData
+                if (participants[name] && participants[name].squares) {
+                    participants[name].squares.forEach(squareId => {
+                        delete squaresData[squareId];
+                    });
+                }
+                // Remove participant
+                delete participants[name];
+                
+                saveData();
+                renderGrid();
+                renderAdminTable();
+                updateStats();
             }
         }
 
