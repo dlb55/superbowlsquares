@@ -387,6 +387,75 @@
         .quarter-key-cell.q3 { background: rgba(212, 175, 55, 0.15); color: var(--gold); }
         .quarter-key-cell.q4 { background: rgba(212, 175, 55, 0.08); color: var(--gold); }
 
+        /* Status Legend */
+        .status-legend {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 8px 12px;
+            background: var(--dark);
+            border-radius: 6px;
+            border: 1px solid var(--dark-tertiary);
+            width: fit-content;
+            margin-left: auto;
+            flex-wrap: wrap;
+        }
+
+        .status-legend-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 0.5px;
+        }
+
+        .status-legend-items {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .status-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .status-legend-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+
+        .status-legend-box.in-money-box {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            border: 1px solid #4ade80;
+            animation: pulse-money 2s ease-in-out infinite;
+        }
+
+        .status-legend-box.winner-q1-box {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border: 1px solid #60a5fa;
+        }
+
+        .status-legend-box.winner-q2-box {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+            border: 1px solid #a78bfa;
+        }
+
+        .status-legend-box.winner-q3-box {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border: 1px solid #fbbf24;
+        }
+
+        .status-legend-box.winner-q4-box {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border: 1px solid #f87171;
+        }
+
         .squares-grid {
             display: grid;
             grid-template-columns: 80px repeat(10, minmax(50px, 70px));
@@ -1152,6 +1221,31 @@
                 font-size: 0.5rem;
             }
 
+            .status-legend {
+                padding: 6px 10px;
+                gap: 6px;
+                margin-bottom: 10px;
+            }
+
+            .status-legend-title {
+                font-size: 0.6rem;
+                width: 100%;
+            }
+
+            .status-legend-items {
+                gap: 8px;
+            }
+
+            .status-legend-item {
+                font-size: 0.6rem;
+                gap: 3px;
+            }
+
+            .status-legend-box {
+                width: 12px;
+                height: 12px;
+            }
+
             .teams-header {
                 margin-bottom: 10px;
             }
@@ -1838,6 +1932,33 @@
                     </div>
                 </div>
 
+                <!-- Status Legend -->
+                <div class="status-legend">
+                    <div class="status-legend-title">Status Key:</div>
+                    <div class="status-legend-items">
+                        <div class="status-legend-item">
+                            <div class="status-legend-box in-money-box"></div>
+                            <span>In the Money</span>
+                        </div>
+                        <div class="status-legend-item">
+                            <div class="status-legend-box winner-q1-box"></div>
+                            <span>Q1 Winner</span>
+                        </div>
+                        <div class="status-legend-item">
+                            <div class="status-legend-box winner-q2-box"></div>
+                            <span>Q2 Winner</span>
+                        </div>
+                        <div class="status-legend-item">
+                            <div class="status-legend-box winner-q3-box"></div>
+                            <span>Q3 Winner</span>
+                        </div>
+                        <div class="status-legend-item">
+                            <div class="status-legend-box winner-q4-box"></div>
+                            <span>Q4 Winner</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- NFC Team Header (Top) -->
                 <div class="teams-header">
                     <span class="team-name team-x" id="teamXName">NFC TEAM</span>
@@ -2466,6 +2587,7 @@ const firebaseConfig = {
                     square.dataset.id = squareId;
 
                     let winnerBadges = [];
+                    const isInTheMoney = inTheMoneyX === x && inTheMoneyY === y;
 
                     if (squaresData[squareId]) {
                         square.classList.add('taken');
@@ -2474,14 +2596,16 @@ const firebaseConfig = {
                         // Check if this square won any quarter
                         for (let q = 1; q <= 4; q++) {
                             if (quarterWinners[q] && quarterWinners[q].x === x && quarterWinners[q].y === y) {
-                                square.classList.add(`winner-q${q}`);
                                 winnerBadges.push(`Q${q}`);
                             }
                         }
 
-                        // Check if "in the money" (only if not already a winner)
-                        if (winnerBadges.length === 0 && inTheMoneyX === x && inTheMoneyY === y) {
+                        // Check if "in the money" - always show this highlight regardless of past wins
+                        if (isInTheMoney) {
                             square.classList.add('in-the-money');
+                        } else if (winnerBadges.length > 0) {
+                            // Only apply winner styling if NOT currently in the money
+                            square.classList.add(`winner-q${winnerBadges[winnerBadges.length - 1].replace('Q', '')}`);
                         }
 
                         // Add winner badges
