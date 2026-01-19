@@ -1609,6 +1609,33 @@
             font-size: 1rem;
         }
 
+        .score-input.quarter-select {
+            width: 70px;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23D4AF37' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            padding-right: 25px;
+        }
+
+        .quarter-score-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+        }
+
         .quarter-scores-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1926,9 +1953,18 @@
                 <div class="score-management-section">
                     <h4 style="color: var(--gold); font-family: 'Oswald', sans-serif; margin-bottom: 15px;">Current Game Score</h4>
                     <p style="color: rgba(255,255,255,0.5); margin-bottom: 15px; font-size: 0.85rem;">
-                        Enter the current score to highlight who is "In the Money" on the grid.
+                        Select the current quarter and enter the score to highlight who is "In the Money" on the grid.
                     </p>
                     <div class="score-inputs">
+                        <div class="score-input-group">
+                            <label class="score-input-label">Current Quarter</label>
+                            <select class="score-input quarter-select" id="currentQuarterSelect">
+                                <option value="1">Q1</option>
+                                <option value="2">Q2</option>
+                                <option value="3">Q3</option>
+                                <option value="4">Q4</option>
+                            </select>
+                        </div>
                         <div class="score-input-group">
                             <label class="score-input-label" id="currentScoreLabelX">NFC Score</label>
                             <input type="number" class="score-input" id="currentScoreX" min="0" max="99" value="0">
@@ -1956,7 +1992,10 @@
                                 <span class="score-dash">-</span>
                                 <input type="number" class="score-input small" id="q1ScoreY" min="0" max="99" placeholder="AFC">
                             </div>
-                            <button class="btn btn-secondary btn-small" onclick="saveQuarterScore(1)">Save Q1</button>
+                            <div class="quarter-score-buttons">
+                                <button class="btn btn-secondary btn-small" onclick="saveQuarterScore(1)">Save Q1</button>
+                                <button class="btn btn-danger btn-small" onclick="clearQuarterScore(1)">Clear</button>
+                            </div>
                             <div class="quarter-winner-display" id="q1WinnerDisplay"></div>
                         </div>
                         <div class="quarter-score-card">
@@ -1966,7 +2005,10 @@
                                 <span class="score-dash">-</span>
                                 <input type="number" class="score-input small" id="q2ScoreY" min="0" max="99" placeholder="AFC">
                             </div>
-                            <button class="btn btn-secondary btn-small" onclick="saveQuarterScore(2)">Save Q2</button>
+                            <div class="quarter-score-buttons">
+                                <button class="btn btn-secondary btn-small" onclick="saveQuarterScore(2)">Save Q2</button>
+                                <button class="btn btn-danger btn-small" onclick="clearQuarterScore(2)">Clear</button>
+                            </div>
                             <div class="quarter-winner-display" id="q2WinnerDisplay"></div>
                         </div>
                         <div class="quarter-score-card">
@@ -1976,7 +2018,10 @@
                                 <span class="score-dash">-</span>
                                 <input type="number" class="score-input small" id="q3ScoreY" min="0" max="99" placeholder="AFC">
                             </div>
-                            <button class="btn btn-secondary btn-small" onclick="saveQuarterScore(3)">Save Q3</button>
+                            <div class="quarter-score-buttons">
+                                <button class="btn btn-secondary btn-small" onclick="saveQuarterScore(3)">Save Q3</button>
+                                <button class="btn btn-danger btn-small" onclick="clearQuarterScore(3)">Clear</button>
+                            </div>
                             <div class="quarter-winner-display" id="q3WinnerDisplay"></div>
                         </div>
                         <div class="quarter-score-card">
@@ -1986,7 +2031,10 @@
                                 <span class="score-dash">-</span>
                                 <input type="number" class="score-input small" id="q4ScoreY" min="0" max="99" placeholder="AFC">
                             </div>
-                            <button class="btn btn-secondary btn-small" onclick="saveQuarterScore(4)">Save Q4</button>
+                            <div class="quarter-score-buttons">
+                                <button class="btn btn-secondary btn-small" onclick="saveQuarterScore(4)">Save Q4</button>
+                                <button class="btn btn-danger btn-small" onclick="clearQuarterScore(4)">Clear</button>
+                            </div>
                             <div class="quarter-winner-display" id="q4WinnerDisplay"></div>
                         </div>
                     </div>
@@ -2150,7 +2198,7 @@ const firebaseConfig = {
             x: { name: 'NFC TEAM', bgColor: '#ffffff', textColor: '#0a0a0a' },
             y: { name: 'AFC TEAM', bgColor: '#D4AF37', textColor: '#0a0a0a' }
         };
-        let currentScore = { x: null, y: null };
+        let currentScore = { x: null, y: null, quarter: 1 };
         let quarterScores = {
             1: { x: null, y: null, winner: null },
             2: { x: null, y: null, winner: null },
@@ -2271,7 +2319,7 @@ const firebaseConfig = {
             });
 
             db.ref('/currentScore').on('value', (snapshot) => {
-                currentScore = snapshot.val() || { x: null, y: null };
+                currentScore = snapshot.val() || { x: null, y: null, quarter: 1 };
                 renderGrid();
                 updateScoreDisplay();
             });
@@ -2339,16 +2387,15 @@ const firebaseConfig = {
             const grid = document.getElementById('squaresGrid');
             grid.innerHTML = '';
 
-            // Calculate "in the money" position
+            // Calculate "in the money" position using selected quarter
             let inTheMoneyX = null;
             let inTheMoneyY = null;
             if (currentScore.x !== null && currentScore.y !== null) {
                 const lastDigitX = currentScore.x % 10;
                 const lastDigitY = currentScore.y % 10;
+                const activeQuarter = currentScore.quarter || 1;
                 // Find column (x) where the number matches lastDigitX
                 for (let i = 0; i < 10; i++) {
-                    // Use Q1 numbers for current score tracking (or whichever quarter is active)
-                    const activeQuarter = getActiveQuarter();
                     if (quarterNumbers[activeQuarter] && quarterNumbers[activeQuarter].x[i] == lastDigitX) {
                         inTheMoneyX = i;
                     }
@@ -2854,9 +2901,11 @@ const firebaseConfig = {
         function updateCurrentScore() {
             const scoreX = document.getElementById('currentScoreX').value;
             const scoreY = document.getElementById('currentScoreY').value;
+            const quarter = document.getElementById('currentQuarterSelect').value;
             
             currentScore.x = scoreX !== '' ? parseInt(scoreX) : null;
             currentScore.y = scoreY !== '' ? parseInt(scoreY) : null;
+            currentScore.quarter = parseInt(quarter);
             
             saveData();
             renderGrid();
@@ -2866,8 +2915,10 @@ const firebaseConfig = {
         function clearCurrentScore() {
             currentScore.x = null;
             currentScore.y = null;
+            currentScore.quarter = 1;
             document.getElementById('currentScoreX').value = '0';
             document.getElementById('currentScoreY').value = '0';
+            document.getElementById('currentQuarterSelect').value = '1';
             
             saveData();
             renderGrid();
@@ -2910,6 +2961,17 @@ const firebaseConfig = {
             populateQuarterScores();
         }
 
+        function clearQuarterScore(quarter) {
+            quarterScores[quarter] = { x: null, y: null, winner: null };
+            document.getElementById(`q${quarter}ScoreX`).value = '';
+            document.getElementById(`q${quarter}ScoreY`).value = '';
+            document.getElementById(`q${quarter}WinnerDisplay`).textContent = '';
+            
+            saveData();
+            renderGrid();
+            updateWinnersDisplay();
+        }
+
         function updateScoreDisplay() {
             const display = document.getElementById('currentScoreDisplay');
             if (currentScore.x !== null && currentScore.y !== null) {
@@ -2945,6 +3007,10 @@ const firebaseConfig = {
                     if (quarterScores[q].winner) {
                         winnerDisplay.textContent = `Winner: ${quarterScores[q].winner}`;
                     }
+                } else {
+                    document.getElementById(`q${q}ScoreX`).value = '';
+                    document.getElementById(`q${q}ScoreY`).value = '';
+                    document.getElementById(`q${q}WinnerDisplay`).textContent = '';
                 }
             }
             
@@ -2954,6 +3020,9 @@ const firebaseConfig = {
             }
             if (currentScore.y !== null) {
                 document.getElementById('currentScoreY').value = currentScore.y;
+            }
+            if (currentScore.quarter) {
+                document.getElementById('currentQuarterSelect').value = currentScore.quarter;
             }
             
             // Update labels with team names
