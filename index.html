@@ -1783,6 +1783,21 @@
             max-width: 150px;
         }
 
+        .remove-payout-btn {
+            padding: 5px 10px;
+            background: transparent;
+            border: 1px solid #dc2626;
+            color: #dc2626;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .remove-payout-btn:hover {
+            background: #dc2626;
+            color: white;
+        }
+
         .payout-inputs {
             background: var(--dark);
             padding: 15px;
@@ -2579,9 +2594,7 @@
                         <div class="prop-stat payout-stat">
                             <div class="prop-stat-label">Payouts</div>
                             <div class="prop-payouts-display" id="propPayoutsDisplay">
-                                <span>🥇 1st: <strong id="payout1Display">$0</strong></span>
-                                <span>🥈 2nd: <strong id="payout2Display">$0</strong></span>
-                                <span>🥉 3rd: <strong id="payout3Display">$0</strong></span>
+                                <!-- Will be dynamically populated -->
                             </div>
                         </div>
                     </div>
@@ -2883,21 +2896,13 @@
                     <p style="color: rgba(255,255,255,0.5); margin-bottom: 15px; font-size: 0.85rem;">
                         Enter payout percentages or fixed amounts. Use % for percentage (e.g., "50%") or numbers for fixed amounts (e.g., "25").
                     </p>
-                    <div class="payout-inputs">
-                        <div class="payout-input-group">
-                            <label>1st Place:</label>
-                            <input type="text" class="modal-input" id="propPayout1" placeholder="e.g., 50% or $50" value="50%">
-                        </div>
-                        <div class="payout-input-group">
-                            <label>2nd Place:</label>
-                            <input type="text" class="modal-input" id="propPayout2" placeholder="e.g., 30% or $30" value="30%">
-                        </div>
-                        <div class="payout-input-group">
-                            <label>3rd Place:</label>
-                            <input type="text" class="modal-input" id="propPayout3" placeholder="e.g., 20% or $20" value="20%">
-                        </div>
+                    <div class="payout-inputs" id="payoutInputsContainer">
+                        <!-- Payout inputs will be dynamically generated -->
                     </div>
-                    <button class="btn btn-primary" id="savePayoutStructureBtn" style="margin-top: 15px;">Save Payout Structure</button>
+                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" id="addPayoutBtn">+ Add Place</button>
+                        <button class="btn btn-primary" id="savePayoutStructureBtn">Save Payout Structure</button>
+                    </div>
                 </div>
 
                 <!-- Set Correct Answers -->
@@ -3048,7 +3053,7 @@ const firebaseConfig = {
         let propBetsEntries = {};
         let propBetsCorrectAnswers = {};
         let propBetsEntriesOpen = true;
-        let propBetsPayoutStructure = { first: '50%', second: '30%', third: '20%' };
+        let propBetsPayoutStructure = ['50%', '30%', '20%'];
         let currentPropBetUser = null;
 
         // ============================================
@@ -3194,7 +3199,19 @@ const firebaseConfig = {
                 propBetsEntries = data.propBetsEntries || {};
                 propBetsCorrectAnswers = data.propBetsCorrectAnswers || {};
                 propBetsEntriesOpen = data.propBetsEntriesOpen !== undefined ? data.propBetsEntriesOpen : true;
-                propBetsPayoutStructure = data.propBetsPayoutStructure || { first: '50%', second: '30%', third: '20%' };
+                // Handle both old object format and new array format
+                if (data.propBetsPayoutStructure) {
+                    if (Array.isArray(data.propBetsPayoutStructure)) {
+                        propBetsPayoutStructure = data.propBetsPayoutStructure;
+                    } else {
+                        // Convert old format to array
+                        propBetsPayoutStructure = [
+                            data.propBetsPayoutStructure.first || '50%',
+                            data.propBetsPayoutStructure.second || '30%',
+                            data.propBetsPayoutStructure.third || '20%'
+                        ];
+                    }
+                }
             }
         }
 
@@ -4292,11 +4309,16 @@ const firebaseConfig = {
             document.getElementById('propResultsEntryCount').textContent = entryCount;
             document.getElementById('propResultsTotalPot').textContent = totalPot;
             
-            // Calculate payout amounts
+            // Calculate payout amounts (now an array)
             const payouts = calculatePayouts(totalPot);
-            document.getElementById('payout1Display').textContent = '$' + payouts.first;
-            document.getElementById('payout2Display').textContent = '$' + payouts.second;
-            document.getElementById('payout3Display').textContent = '$' + payouts.third;
+            
+            // Update payouts display dynamically
+            const payoutsContainer = document.getElementById('propPayoutsDisplay');
+            const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
+            const ordinals = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th'];
+            payoutsContainer.innerHTML = payouts.map((amount, idx) => 
+                `<span>${medals[idx] || '•'} ${ordinals[idx] || (idx+1)+'th'}: <strong>$${amount}</strong></span>`
+            ).join('');
             
             // Calculate scores
             const entries = Object.keys(propBetsEntries).map(key => {
@@ -4353,16 +4375,15 @@ const firebaseConfig = {
                 const row = document.createElement('tr');
                 let placeClass = 'place-other';
                 let payoutAmount = '';
-                if (entry.place === 1) {
-                    placeClass = 'place-1';
-                    payoutAmount = '$' + payouts.first;
-                } else if (entry.place === 2) {
-                    placeClass = 'place-2';
-                    payoutAmount = '$' + payouts.second;
-                } else if (entry.place === 3) {
-                    placeClass = 'place-3';
-                    payoutAmount = '$' + payouts.third;
+                
+                // Get payout for this place (array is 0-indexed, place is 1-indexed)
+                if (entry.place <= payouts.length) {
+                    payoutAmount = '$' + payouts[entry.place - 1];
                 }
+                
+                if (entry.place === 1) placeClass = 'place-1';
+                else if (entry.place === 2) placeClass = 'place-2';
+                else if (entry.place === 3) placeClass = 'place-3';
                 
                 row.innerHTML = `
                     <td><span class="place-badge ${placeClass}">${entry.place}</span></td>
@@ -4388,26 +4409,57 @@ const firebaseConfig = {
                 return parseInt(value) || 0;
             };
             
-            return {
-                first: parsePayoutValue(propBetsPayoutStructure.first, totalPot),
-                second: parsePayoutValue(propBetsPayoutStructure.second, totalPot),
-                third: parsePayoutValue(propBetsPayoutStructure.third, totalPot)
-            };
+            return propBetsPayoutStructure.map(value => parsePayoutValue(value, totalPot));
         }
 
         function savePayoutStructure() {
-            propBetsPayoutStructure.first = document.getElementById('propPayout1').value || '50%';
-            propBetsPayoutStructure.second = document.getElementById('propPayout2').value || '30%';
-            propBetsPayoutStructure.third = document.getElementById('propPayout3').value || '20%';
+            const inputs = document.querySelectorAll('#payoutInputsContainer .payout-value-input');
+            propBetsPayoutStructure = [];
+            inputs.forEach(input => {
+                if (input.value.trim()) {
+                    propBetsPayoutStructure.push(input.value.trim());
+                }
+            });
+            if (propBetsPayoutStructure.length === 0) {
+                propBetsPayoutStructure = ['50%', '30%', '20%'];
+            }
             saveData();
             alert('Payout structure saved!');
             renderPropBetsLeaderboard();
         }
 
         function populatePayoutStructure() {
-            document.getElementById('propPayout1').value = propBetsPayoutStructure.first;
-            document.getElementById('propPayout2').value = propBetsPayoutStructure.second;
-            document.getElementById('propPayout3').value = propBetsPayoutStructure.third;
+            renderPayoutInputs();
+        }
+
+        function renderPayoutInputs() {
+            const container = document.getElementById('payoutInputsContainer');
+            container.innerHTML = '';
+            
+            const ordinals = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th'];
+            
+            propBetsPayoutStructure.forEach((value, index) => {
+                const div = document.createElement('div');
+                div.className = 'payout-input-group';
+                div.innerHTML = `
+                    <label>${ordinals[index] || (index + 1) + 'th'} Place:</label>
+                    <input type="text" class="modal-input payout-value-input" data-index="${index}" placeholder="e.g., 50% or $50" value="${value}">
+                    ${index >= 3 ? `<button class="btn btn-small remove-payout-btn" onclick="removePayoutPlace(${index})">✕</button>` : ''}
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function addPayoutPlace() {
+            propBetsPayoutStructure.push('0%');
+            renderPayoutInputs();
+        }
+
+        function removePayoutPlace(index) {
+            if (propBetsPayoutStructure.length > 1) {
+                propBetsPayoutStructure.splice(index, 1);
+                renderPayoutInputs();
+            }
         }
 
         // ============================================
@@ -4725,6 +4777,7 @@ const firebaseConfig = {
             document.getElementById('togglePropEntriesBtn').addEventListener('click', togglePropEntries);
             document.getElementById('saveCorrectAnswersBtn').addEventListener('click', saveCorrectAnswers);
             document.getElementById('savePayoutStructureBtn').addEventListener('click', savePayoutStructure);
+            document.getElementById('addPayoutBtn').addEventListener('click', addPayoutPlace);
             
             // Question type change handler
             document.getElementById('newQuestionType').addEventListener('change', (e) => {
