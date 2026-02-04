@@ -1658,6 +1658,19 @@
             font-size: 1.1rem;
         }
 
+        .prop-standings-notice {
+            text-align: center;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(109, 40, 217, 0.2) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #a78bfa;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
         .prop-name-entry {
             text-align: center;
             padding: 40px;
@@ -2768,6 +2781,10 @@
                 <div id="propBetsForm" class="prop-bets-form">
                     <h2 class="prop-bets-title">🎯 Super Bowl Prop Bets</h2>
                     <p class="prop-bets-subtitle">$5 Entry Fee • Answer all questions to submit</p>
+                    
+                    <div class="prop-standings-notice">
+                        📊 Check back here for updated standings when the game starts!
+                    </div>
                     
                     <div class="prop-name-entry" id="propNameEntry">
                         <label class="prop-label">Enter Your Name to Begin:</label>
@@ -4479,6 +4496,10 @@ const firebaseConfig = {
                             <span class="payment-method">Zelle:</span>
                             <span class="payment-handle">drewlabelle5@gmail.com</span>
                         </div>
+                    </div>
+                    
+                    <div class="prop-standings-notice" style="margin: 20px 0;">
+                        📊 Check back on the Prop Bets page for updated standings when the game starts!
                     </div>
                     
                     <div class="modal-actions">
