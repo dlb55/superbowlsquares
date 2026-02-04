@@ -100,7 +100,6 @@
 
         .price-badge {
             display: inline-block;
-            margin-top: 10px;
             padding: 10px 30px;
             background: linear-gradient(135deg, var(--gold) 0%, #8B7355 100%);
             color: var(--dark);
@@ -109,6 +108,66 @@
             font-size: 1.2rem;
             border-radius: 4px;
             letter-spacing: 1px;
+        }
+
+        .header-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .prop-badge {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+        }
+
+        .prop-standings-header {
+            margin-top: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(139, 92, 246, 0.15);
+            padding: 8px 15px;
+            border-radius: 6px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .prop-standings-label {
+            color: #a78bfa;
+            font-weight: 500;
+        }
+
+        .prop-standings-list {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .prop-standing-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .prop-standing-place {
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .prop-standing-name {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .prop-standing-score {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
         }
 
         .payouts-info {
@@ -1834,6 +1893,116 @@
             background: rgba(212, 175, 55, 0.05);
         }
 
+        .clickable-row {
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .clickable-row:hover {
+            background: rgba(212, 175, 55, 0.15) !important;
+        }
+
+        .name-cell {
+            position: relative;
+        }
+
+        .view-answers-hint {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-left: 8px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .clickable-row:hover .view-answers-hint {
+            opacity: 1;
+        }
+
+        .answers-modal {
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .answers-score-summary {
+            text-align: center;
+            padding: 12px;
+            background: var(--dark);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .answers-score-summary strong {
+            color: var(--gold);
+        }
+
+        .entry-answers-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .entry-answer-item {
+            background: var(--dark);
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--dark-tertiary);
+        }
+
+        .entry-answer-item.answer-correct {
+            border-left-color: var(--success);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .entry-answer-item.answer-incorrect {
+            border-left-color: #dc2626;
+            background: rgba(220, 38, 38, 0.1);
+        }
+
+        .entry-answer-question {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 5px;
+        }
+
+        .entry-answer-value {
+            font-weight: 500;
+            color: var(--white);
+        }
+
+        .correct-answer-hint {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-left: 8px;
+        }
+
+        .success-modal .success-icon {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .success-modal .success-message {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--white);
+            margin-bottom: 5px;
+        }
+
+        .success-modal .success-submessage {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
+        }
+
+        .success-modal .modal-actions {
+            flex-direction: column;
+            gap: 10px;
+        }
+
         .place-badge {
             display: inline-block;
             padding: 5px 12px;
@@ -2450,7 +2619,10 @@
     <div class="app-container">
         <header class="header">
             <h1 class="logo">DREWLA'S 2026 SUPERBOWL SQUARES</h1>
-            <div class="price-badge">$25 PER SQUARE</div>
+            <div class="header-badges">
+                <div class="price-badge">$25 PER SQUARE</div>
+                <div class="price-badge prop-badge">$5 PER PROP SHEET</div>
+            </div>
             <div class="payouts-info">
                 <span class="payouts-label">PAYOUTS:</span>
                 <span class="payout-item"><strong>Q1:</strong> $500</span>
@@ -2470,6 +2642,13 @@
                 <span class="winner-item"><strong>Q3:</strong> <span class="winner-name pending" id="winnerQ3">TBD</span></span>
                 <span class="payout-divider">•</span>
                 <span class="winner-item"><strong>Q4:</strong> <span class="winner-name pending" id="winnerQ4">TBD</span></span>
+            </div>
+            <!-- Prop Bets Top 5 Standings -->
+            <div class="prop-standings-header" id="propStandingsHeader">
+                <span class="prop-standings-label">🎯 PROP BETS TOP 5:</span>
+                <div class="prop-standings-list" id="propStandingsHeaderList">
+                    <span class="prop-standing-item">No entries yet</span>
+                </div>
             </div>
             <div class="current-score-display" id="currentScoreDisplay" style="display: none;">
                 <div class="score-team">
@@ -4273,19 +4452,25 @@ const firebaseConfig = {
             modal.className = 'modal-overlay active';
             modal.id = 'propBetSuccessModal';
             modal.innerHTML = `
-                <div class="modal">
-                    <h2 class="modal-title">🎉 Prop Bets Submitted!</h2>
-                    <p style="text-align: center; margin-bottom: 20px; color: rgba(255,255,255,0.7);">
-                        Thank you, ${currentPropBetUser}! Your prop bets have been recorded.
-                    </p>
+                <div class="modal success-modal">
+                    <div class="success-icon">🎯</div>
+                    <h2 class="modal-title">Prop Bets Submitted!</h2>
+                    <p class="success-message">Thank you, <strong>${currentPropBetUser}</strong>!</p>
+                    <p class="success-submessage">Your prop bet answers have been recorded.</p>
+                    
                     <div class="modal-summary">
                         <div class="summary-row">
+                            <span>Questions Answered</span>
+                            <span>${propBetsQuestions.length}</span>
+                        </div>
+                        <div class="summary-row total-row">
                             <span>Entry Fee</span>
                             <span>$5</span>
                         </div>
                     </div>
+                    
                     <div class="payment-instructions">
-                        <p class="payment-title">Payment Options:</p>
+                        <p class="payment-title">💳 Payment Options:</p>
                         <div class="payment-option">
                             <span class="payment-method">Venmo:</span>
                             <span class="payment-handle">@drew-labelle</span>
@@ -4295,16 +4480,26 @@ const firebaseConfig = {
                             <span class="payment-handle">drewlabelle5@gmail.com</span>
                         </div>
                     </div>
-                    <div class="modal-actions" style="flex-direction: column; gap: 10px;">
-                        <button class="btn btn-primary" onclick="exportPropBetsPDF()">📄 Export My Answers (PDF)</button>
-                        <button class="btn btn-secondary" onclick="closePropBetSuccess()">Close</button>
+                    
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" onclick="exportAndReturn()">
+                            📄 Export Answers to PDF & Return Home
+                        </button>
+                        <button class="btn btn-secondary" onclick="returnHome()">
+                            🏠 Return Home
+                        </button>
                     </div>
                 </div>
             `;
             document.body.appendChild(modal);
         }
 
-        function closePropBetSuccess() {
+        function exportAndReturn() {
+            exportPropBetsPDF();
+            returnHome();
+        }
+
+        function returnHome() {
             const modal = document.getElementById('propBetSuccessModal');
             if (modal) modal.remove();
             
@@ -4313,6 +4508,13 @@ const firebaseConfig = {
             document.getElementById('propBetName').value = '';
             document.getElementById('propNameEntry').style.display = 'block';
             document.getElementById('propQuestionsContainer').style.display = 'none';
+            
+            // Go back to squares section
+            showSection('squares');
+        }
+
+        function closePropBetSuccess() {
+            returnHome();
         }
 
         function exportPropBetsPDF() {
@@ -4368,15 +4570,17 @@ const firebaseConfig = {
 
         function renderPropBetsLeaderboard() {
             const tbody = document.getElementById('propResultsBody');
-            tbody.innerHTML = '';
+            if (tbody) tbody.innerHTML = '';
             
             // Calculate pot and payouts
             const entryCount = Object.keys(propBetsEntries).length;
             const totalPot = entryCount * 5;
             
-            // Update stats display
-            document.getElementById('propResultsEntryCount').textContent = entryCount;
-            document.getElementById('propResultsTotalPot').textContent = totalPot;
+            // Update stats display (if elements exist)
+            const entryCountEl = document.getElementById('propResultsEntryCount');
+            const totalPotEl = document.getElementById('propResultsTotalPot');
+            if (entryCountEl) entryCountEl.textContent = entryCount;
+            if (totalPotEl) totalPotEl.textContent = totalPot;
             
             // Calculate payout amounts (now an array)
             const payouts = calculatePayouts(totalPot);
@@ -4385,9 +4589,11 @@ const firebaseConfig = {
             const payoutsContainer = document.getElementById('propPayoutsDisplay');
             const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
             const ordinals = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th'];
-            payoutsContainer.innerHTML = payouts.map((amount, idx) => 
-                `<span>${medals[idx] || '•'} ${ordinals[idx] || (idx+1)+'th'}: <strong>$${amount}</strong></span>`
-            ).join('');
+            if (payoutsContainer) {
+                payoutsContainer.innerHTML = payouts.map((amount, idx) => 
+                    `<span>${medals[idx] || '•'} ${ordinals[idx] || (idx+1)+'th'}: <strong>$${amount}</strong></span>`
+                ).join('');
+            }
             
             // Calculate scores
             const entries = Object.keys(propBetsEntries).map(key => {
@@ -4439,34 +4645,118 @@ const firebaseConfig = {
                 previousTiebreaker = entry.tiebreaker;
             });
             
-            // Render
-            entries.forEach(entry => {
-                const row = document.createElement('tr');
-                let placeClass = 'place-other';
-                let payoutAmount = '';
+            // Update header standings (top 5)
+            updateHeaderPropStandings(entries.slice(0, 5));
+            
+            // Render table (only if results section exists and entries closed)
+            if (tbody && !propBetsEntriesOpen) {
+                entries.forEach(entry => {
+                    const row = document.createElement('tr');
+                    row.className = 'clickable-row';
+                    row.onclick = () => showEntryAnswers(entry.key);
+                    let placeClass = 'place-other';
+                    let payoutAmount = '';
+                    
+                    // Get payout for this place (array is 0-indexed, place is 1-indexed)
+                    if (entry.place <= payouts.length) {
+                        payoutAmount = '$' + payouts[entry.place - 1];
+                    }
+                    
+                    if (entry.place === 1) placeClass = 'place-1';
+                    else if (entry.place === 2) placeClass = 'place-2';
+                    else if (entry.place === 3) placeClass = 'place-3';
+                    
+                    const totalQuestions = propBetsQuestions.filter(q => !q.isTiebreaker).length;
+                    
+                    row.innerHTML = `
+                        <td><span class="place-badge ${placeClass}">${entry.place}</span></td>
+                        <td class="name-cell">${entry.name} <span class="view-answers-hint">👁 View</span></td>
+                        <td>${entry.correct} / ${totalQuestions}</td>
+                        <td>${entry.tiebreaker}</td>
+                        <td class="payout-cell">${payoutAmount}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
                 
-                // Get payout for this place (array is 0-indexed, place is 1-indexed)
-                if (entry.place <= payouts.length) {
-                    payoutAmount = '$' + payouts[entry.place - 1];
+                if (entries.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: rgba(255,255,255,0.5);">No entries yet</td></tr>';
+                }
+            }
+        }
+
+        function updateHeaderPropStandings(topEntries) {
+            const container = document.getElementById('propStandingsHeaderList');
+            if (!container) return;
+            
+            if (topEntries.length === 0) {
+                container.innerHTML = '<span class="prop-standing-item">No entries yet</span>';
+                return;
+            }
+            
+            const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
+            const totalQuestions = propBetsQuestions.filter(q => !q.isTiebreaker).length;
+            
+            container.innerHTML = topEntries.map((entry, idx) => `
+                <span class="prop-standing-item">
+                    <span class="prop-standing-place">${medals[idx] || (idx+1)}</span>
+                    <span class="prop-standing-name">${entry.name}</span>
+                    <span class="prop-standing-score">(${entry.correct}/${totalQuestions})</span>
+                </span>
+            `).join('<span class="payout-divider">•</span>');
+        }
+
+        function showEntryAnswers(key) {
+            const entry = propBetsEntries[key];
+            if (!entry) return;
+            
+            const totalQuestions = propBetsQuestions.filter(q => !q.isTiebreaker).length;
+            let correctCount = 0;
+            
+            let questionsHtml = propBetsQuestions.map((question, index) => {
+                const answer = entry.answers[index] || 'N/A';
+                const correctAnswer = propBetsCorrectAnswers[index];
+                let isCorrect = false;
+                let statusClass = '';
+                let statusIcon = '';
+                
+                if (!question.isTiebreaker && correctAnswer) {
+                    isCorrect = answer.toString().toLowerCase() === correctAnswer.toString().toLowerCase();
+                    statusClass = isCorrect ? 'answer-correct' : 'answer-incorrect';
+                    statusIcon = isCorrect ? '✓' : '✗';
+                    if (isCorrect) correctCount++;
                 }
                 
-                if (entry.place === 1) placeClass = 'place-1';
-                else if (entry.place === 2) placeClass = 'place-2';
-                else if (entry.place === 3) placeClass = 'place-3';
-                
-                row.innerHTML = `
-                    <td><span class="place-badge ${placeClass}">${entry.place}</span></td>
-                    <td>${entry.name}</td>
-                    <td>${entry.correct} / ${propBetsQuestions.filter(q => !q.isTiebreaker).length}</td>
-                    <td>${entry.tiebreaker}</td>
-                    <td class="payout-cell">${payoutAmount}</td>
+                return `
+                    <div class="entry-answer-item ${statusClass}">
+                        <div class="entry-answer-question">${index + 1}. ${question.text}${question.isTiebreaker ? ' (TIEBREAKER)' : ''}</div>
+                        <div class="entry-answer-value">
+                            ${statusIcon} ${answer}
+                            ${correctAnswer && !isCorrect && !question.isTiebreaker ? `<span class="correct-answer-hint">(Correct: ${correctAnswer})</span>` : ''}
+                        </div>
+                    </div>
                 `;
-                tbody.appendChild(row);
-            });
+            }).join('');
             
-            if (entries.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: rgba(255,255,255,0.5);">No entries yet</td></tr>';
-            }
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.id = 'viewAnswersModal';
+            modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+            modal.innerHTML = `
+                <div class="modal answers-modal">
+                    <h2 class="modal-title">${entry.displayName}'s Answers</h2>
+                    <div class="answers-score-summary">
+                        Score: <strong>${correctCount} / ${totalQuestions}</strong> correct
+                        ${entry.tiebreakerAnswer ? ` • Tiebreaker: <strong>${entry.tiebreakerAnswer}</strong>` : ''}
+                    </div>
+                    <div class="entry-answers-list">
+                        ${questionsHtml}
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" onclick="document.getElementById('viewAnswersModal').remove()">Close</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
         }
 
         function calculatePayouts(totalPot) {
