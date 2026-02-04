@@ -1948,6 +1948,34 @@
             gap: 15px;
         }
 
+        .question-reorder-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .reorder-btn {
+            padding: 4px 8px;
+            background: var(--dark-tertiary);
+            border: 1px solid var(--dark-tertiary);
+            color: rgba(255, 255, 255, 0.7);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.2s ease;
+        }
+
+        .reorder-btn:hover:not(:disabled) {
+            background: var(--gold);
+            color: var(--dark);
+            border-color: var(--gold);
+        }
+
+        .reorder-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
         .admin-question-info {
             flex: 1;
         }
@@ -1965,6 +1993,7 @@
         .admin-question-actions {
             display: flex;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
         .prop-entries-table {
@@ -3179,6 +3208,46 @@ const firebaseConfig = {
                 renderGrid();
                 updateWinnersDisplay();
                 if (isAdmin) populateQuarterScores();
+            });
+
+            // Prop Bets listeners
+            db.ref('/propBetsQuestions').on('value', (snapshot) => {
+                propBetsQuestions = snapshot.val() || [];
+                if (isAdmin) {
+                    renderAdminQuestionsList();
+                    renderCorrectAnswersForm();
+                }
+            });
+
+            db.ref('/propBetsEntries').on('value', (snapshot) => {
+                propBetsEntries = snapshot.val() || {};
+                if (isAdmin) renderPropEntriesTable();
+                renderPropBetsLeaderboard();
+            });
+
+            db.ref('/propBetsCorrectAnswers').on('value', (snapshot) => {
+                propBetsCorrectAnswers = snapshot.val() || {};
+                if (isAdmin) renderCorrectAnswersForm();
+                renderPropBetsLeaderboard();
+            });
+
+            db.ref('/propBetsEntriesOpen').on('value', (snapshot) => {
+                propBetsEntriesOpen = snapshot.val() !== undefined ? snapshot.val() : true;
+                if (isAdmin) updatePropEntriesStatus();
+                renderPropBetsPage();
+            });
+
+            db.ref('/propBetsPayoutStructure').on('value', (snapshot) => {
+                const val = snapshot.val();
+                if (val) {
+                    if (Array.isArray(val)) {
+                        propBetsPayoutStructure = val;
+                    } else {
+                        propBetsPayoutStructure = [val.first || '50%', val.second || '30%', val.third || '20%'];
+                    }
+                }
+                if (isAdmin) populatePayoutStructure();
+                renderPropBetsLeaderboard();
             });
         }
 
@@ -4522,6 +4591,10 @@ const firebaseConfig = {
                 const item = document.createElement('div');
                 item.className = 'admin-question-item';
                 item.innerHTML = `
+                    <div class="question-reorder-btns">
+                        <button class="reorder-btn" onclick="moveQuestionUp(${index})" ${index === 0 ? 'disabled' : ''} title="Move Up">▲</button>
+                        <button class="reorder-btn" onclick="moveQuestionDown(${index})" ${index === propBetsQuestions.length - 1 ? 'disabled' : ''} title="Move Down">▼</button>
+                    </div>
                     <div class="admin-question-info">
                         <div class="admin-question-text">${index + 1}. ${question.text}</div>
                         <div class="admin-question-meta">
@@ -4530,11 +4603,53 @@ const firebaseConfig = {
                         </div>
                     </div>
                     <div class="admin-question-actions">
+                        <button class="toggle-btn" onclick="editQuestion(${index})">Edit</button>
                         <button class="toggle-btn remove-btn" onclick="removeQuestion(${index})">Remove</button>
                     </div>
                 `;
                 container.appendChild(item);
             });
+        }
+
+        function moveQuestionUp(index) {
+            if (index > 0) {
+                const temp = propBetsQuestions[index];
+                propBetsQuestions[index] = propBetsQuestions[index - 1];
+                propBetsQuestions[index - 1] = temp;
+                saveData();
+                renderAdminQuestionsList();
+                renderCorrectAnswersForm();
+            }
+        }
+
+        function moveQuestionDown(index) {
+            if (index < propBetsQuestions.length - 1) {
+                const temp = propBetsQuestions[index];
+                propBetsQuestions[index] = propBetsQuestions[index + 1];
+                propBetsQuestions[index + 1] = temp;
+                saveData();
+                renderAdminQuestionsList();
+                renderCorrectAnswersForm();
+            }
+        }
+
+        function editQuestion(index) {
+            const question = propBetsQuestions[index];
+            const newText = prompt('Edit question text:', question.text);
+            if (newText && newText.trim()) {
+                propBetsQuestions[index].text = newText.trim();
+                
+                if (question.type === 'multiple') {
+                    const newOptions = prompt('Edit options (comma separated):', question.options.join(', '));
+                    if (newOptions) {
+                        propBetsQuestions[index].options = newOptions.split(',').map(o => o.trim()).filter(o => o);
+                    }
+                }
+                
+                saveData();
+                renderAdminQuestionsList();
+                renderCorrectAnswersForm();
+            }
         }
 
         function renderCorrectAnswersForm() {
