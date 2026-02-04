@@ -4619,34 +4619,56 @@ const firebaseConfig = {
             });
             
             // Get actual total score for tiebreaker comparison
-            const actualTotal = (quarterScores[4]?.x || 0) + (quarterScores[4]?.y || 0);
+            // Find the tiebreaker question and get its correct answer (the actual game total)
+            const tiebreakerQuestion = propBetsQuestions.findIndex(q => q.isTiebreaker);
+            const actualTotal = tiebreakerQuestion >= 0 && propBetsCorrectAnswers[tiebreakerQuestion] 
+                ? parseFloat(propBetsCorrectAnswers[tiebreakerQuestion]) 
+                : null;
             
-            // Sort by correct answers (desc), then by tiebreaker closeness
+            // Sort by correct answers (desc), then by tiebreaker closeness ONLY if actual total is set
             entries.sort((a, b) => {
                 if (b.correct !== a.correct) return b.correct - a.correct;
-                // Tiebreaker: closest to actual total
-                const aDiff = Math.abs(a.tiebreaker - actualTotal);
-                const bDiff = Math.abs(b.tiebreaker - actualTotal);
-                return aDiff - bDiff;
+                // Only use tiebreaker if actual total has been entered
+                if (actualTotal !== null) {
+                    const aDiff = Math.abs(a.tiebreaker - actualTotal);
+                    const bDiff = Math.abs(b.tiebreaker - actualTotal);
+                    return aDiff - bDiff;
+                }
+                return 0; // Keep original order if no tiebreaker set
             });
             
-            // Assign places (handle ties)
+            // Assign places (handle ties properly)
             let currentPlace = 1;
-            let previousScore = null;
-            let previousTiebreaker = null;
             
             entries.forEach((entry, index) => {
-                if (previousScore !== null && (entry.correct !== previousScore || 
-                    Math.abs(entry.tiebreaker - actualTotal) !== Math.abs(previousTiebreaker - actualTotal))) {
-                    currentPlace = index + 1;
+                if (index === 0) {
+                    entry.place = 1;
+                } else {
+                    const prevEntry = entries[index - 1];
+                    // Check if tied with previous entry
+                    const sameScore = entry.correct === prevEntry.correct;
+                    const sameTiebreaker = actualTotal === null || 
+                        Math.abs(entry.tiebreaker - actualTotal) === Math.abs(prevEntry.tiebreaker - actualTotal);
+                    
+                    if (sameScore && sameTiebreaker) {
+                        // Tied - same place
+                        entry.place = prevEntry.place;
+                    } else {
+                        // Not tied - place is current index + 1
+                        entry.place = index + 1;
+                    }
                 }
-                entry.place = currentPlace;
-                previousScore = entry.correct;
-                previousTiebreaker = entry.tiebreaker;
+                entry.isTied = false; // Will be updated below
             });
             
-            // Update header standings (top 5)
-            updateHeaderPropStandings(entries.slice(0, 5));
+            // Mark entries that are tied
+            entries.forEach(entry => {
+                const othersWithSamePlace = entries.filter(e => e.place === entry.place);
+                entry.isTied = othersWithSamePlace.length > 1;
+            });
+            
+            // Update header standings (top 5 unique places)
+            updateHeaderPropStandings(entries);
             
             // Render table (only if results section exists and entries closed)
             if (tbody && !propBetsEntriesOpen) {
@@ -4667,9 +4689,10 @@ const firebaseConfig = {
                     else if (entry.place === 3) placeClass = 'place-3';
                     
                     const totalQuestions = propBetsQuestions.filter(q => !q.isTiebreaker).length;
+                    const placeDisplay = entry.isTied ? `T${entry.place}` : entry.place;
                     
                     row.innerHTML = `
-                        <td><span class="place-badge ${placeClass}">${entry.place}</span></td>
+                        <td><span class="place-badge ${placeClass}">${placeDisplay}</span></td>
                         <td class="name-cell">${entry.name} <span class="view-answers-hint">👁 View</span></td>
                         <td>${entry.correct} / ${totalQuestions}</td>
                         <td>${entry.tiebreaker}</td>
@@ -4684,11 +4707,11 @@ const firebaseConfig = {
             }
         }
 
-        function updateHeaderPropStandings(topEntries) {
+        function updateHeaderPropStandings(allEntries) {
             const container = document.getElementById('propStandingsHeaderList');
             if (!container) return;
             
-            if (topEntries.length === 0) {
+            if (allEntries.length === 0) {
                 container.innerHTML = '<span class="prop-standing-item">No entries yet</span>';
                 return;
             }
@@ -4696,13 +4719,42 @@ const firebaseConfig = {
             const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
             const totalQuestions = propBetsQuestions.filter(q => !q.isTiebreaker).length;
             
-            container.innerHTML = topEntries.map((entry, idx) => `
-                <span class="prop-standing-item">
-                    <span class="prop-standing-place">${medals[idx] || (idx+1)}</span>
-                    <span class="prop-standing-name">${entry.name}</span>
-                    <span class="prop-standing-score">(${entry.correct}/${totalQuestions})</span>
-                </span>
-            `).join('<span class="payout-divider">•</span>');
+            // Group entries by place
+            const placeGroups = {};
+            allEntries.forEach(entry => {
+                if (!placeGroups[entry.place]) {
+                    placeGroups[entry.place] = [];
+                }
+                placeGroups[entry.place].push(entry);
+            });
+            
+            // Get unique places in order, limit to top 5 places
+            const uniquePlaces = Object.keys(placeGroups).map(Number).sort((a, b) => a - b).slice(0, 5);
+            
+            const standingsHtml = uniquePlaces.map((place, idx) => {
+                const entriesAtPlace = placeGroups[place];
+                const medal = medals[idx] || (place);
+                const score = entriesAtPlace[0].correct;
+                
+                let nameDisplay;
+                if (entriesAtPlace.length === 1) {
+                    nameDisplay = entriesAtPlace[0].name;
+                } else if (entriesAtPlace.length <= 3) {
+                    nameDisplay = entriesAtPlace.map(e => e.name).join(', ');
+                } else {
+                    nameDisplay = 'Multiple';
+                }
+                
+                return `
+                    <span class="prop-standing-item">
+                        <span class="prop-standing-place">${medal}</span>
+                        <span class="prop-standing-name">${nameDisplay}</span>
+                        <span class="prop-standing-score">(${score}/${totalQuestions})</span>
+                    </span>
+                `;
+            }).join('<span class="payout-divider">•</span>');
+            
+            container.innerHTML = standingsHtml;
         }
 
         function showEntryAnswers(key) {
