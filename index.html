@@ -4980,15 +4980,47 @@ const firebaseConfig = {
         }
 
         function saveCorrectAnswers() {
+            // Clear existing answers and rebuild from form
+            const newCorrectAnswers = {};
+            
+            console.log('Saving correct answers...');
+            
             propBetsQuestions.forEach((question, index) => {
                 const input = document.getElementById(`correct-${index}`);
-                if (input && input.value.trim()) {
-                    propBetsCorrectAnswers[index] = input.value.trim();
+                if (input) {
+                    const value = input.value.trim();
+                    console.log(`Question ${index}: "${value}"`);
+                    if (value) {
+                        newCorrectAnswers[index] = value;
+                    }
                 }
             });
-            saveData();
-            alert('Correct answers saved!');
-            renderPropBetsLeaderboard();
+            
+            console.log('New correct answers:', newCorrectAnswers);
+            
+            // Replace the entire object
+            propBetsCorrectAnswers = newCorrectAnswers;
+            
+            // Save to Firebase/localStorage
+            if (isFirebaseConnected) {
+                // Explicitly save just the correct answers to Firebase
+                db.ref('/propBetsCorrectAnswers').set(propBetsCorrectAnswers)
+                    .then(() => {
+                        console.log('Correct answers saved to Firebase');
+                        renderPropBetsLeaderboard();
+                        renderPropEntriesTable();
+                        alert('Correct answers saved!');
+                    })
+                    .catch(err => {
+                        console.error('Error saving to Firebase:', err);
+                        alert('Error saving answers. Please try again.');
+                    });
+            } else {
+                saveData();
+                renderPropBetsLeaderboard();
+                renderPropEntriesTable();
+                alert('Correct answers saved!');
+            }
         }
 
         function togglePropEntries() {
